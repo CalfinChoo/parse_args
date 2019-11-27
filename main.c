@@ -3,23 +3,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char ** parse_args( char * line );
-
-int main() {
-  char * test = "ls -a -l";
-  char ** p = parse_args(test);
-  execvp("bin/ls", p);
-  return 0;
-}
-
-char ** parse_args(char * line) {
-  char * temp = strsep(line, " ");
-  char * arr[5];
+char ** parse_args( char * line ) {
+  char ** arr = malloc(5 * sizeof(char *));
   int i = 0;
-  while(temp != NULL) {
-    arr[i] = temp;
-    temp = strsep(line, " ");
+  while(line != NULL) {
+    arr[i] = strsep(&line, " ");
     i++;
   }
+  arr[i] = NULL;
   return arr;
+}
+
+int main() {
+  char a[50] = "ls -l -a";
+  char ** args = parse_args(a);
+  execvp(args[0], args);
+  free(args);
+  return 0;
 }
